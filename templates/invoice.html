@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Invoice</title>
+</head>
+<body>
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <div class="display-4" id="welcome-message">
+    </div>
+    <div class="student-profile">
+        <div class="content">
+            <h3 class="text-sm-center">Invoice Details</h3>
+            <hr />
+            <form action="#">
+                <div class="form-group">
+                    <p>Reference: </p>
+                </div>
+                <div class="form-group">
+                    <p>Student ID: </p>
+                </div>
+                <div class="form-group">
+                    <p>Amount: </p>
+                </div>
+                <div class="form-group">
+                    <p>Due Date: </p>
+                </div>
+                <div class="form-group">
+                    <p>Status: </p>
+                </div>
+                <div class="form-group">
+                    <p>Type: </p>
+                </div>
+                <hr />
+            </form>
+        </div>
+    </div>
+
+
+</div>
+{% endblock %}
+</body>
+</html>

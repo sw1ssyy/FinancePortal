@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice Payment Portal</title>
+</head>
+<body>
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container text-center m-4">
+    <form action="" METHOD="get">
+
+        {% csrf_token %}
+            {{ form.as_p }}
+        <button class="btn btn-primary mt-3" type="submit">View Invoice</button>
+        <button class="btn btn-secondary mt-3" type="reset">Reset</button>
+    </form>
+</div>
+{% endblock %}
+</body>
+</html>
