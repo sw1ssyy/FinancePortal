@@ -8,36 +8,37 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container">
-    <div class="display-4" id="welcome-message">
-    </div>
     <div class="student-profile">
         <div class="content">
             <h3 class="text-sm-center">Invoice Details</h3>
             <hr />
-            <form action="#">
+            <form action="">
                 <div class="form-group">
-                    <p>Reference: </p>
+                    <p><Strong>Reference: </Strong>{{ Invoice.reference }}</p>
                 </div>
                 <div class="form-group">
-                    <p>Student ID: </p>
+                    <p><Strong>Student ID: </Strong>{{ Invoice.account_id }}</p>
                 </div>
                 <div class="form-group">
-                    <p>Amount: </p>
+                  <p><Strong>Amount: </Strong>£{{ Invoice.amount }}</p>
                 </div>
                 <div class="form-group">
-                    <p>Due Date: </p>
+                    <p><Strong>Due Date: </Strong>{{ Invoice.dueDate }}</p>
                 </div>
                 <div class="form-group">
-                    <p>Status: </p>
+                <p><Strong>Status: </Strong>{{ Invoice.status }}</p>
                 </div>
                 <div class="form-group">
-                    <p>Type: </p>
+                <p><Strong>Type: </Strong>{{ Invoice.type }}</p>
                 </div>
                 <hr />
             </form>
+            <button class="btn btn-primary">PAY</button>
+            <a href="/portal">
+                <button class="btn btn-secondary">Back to Portal</button>
+            </a>
         </div>
     </div>
-
 
 </div>
 {% endblock %}
