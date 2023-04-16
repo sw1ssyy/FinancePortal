@@ -1,11 +1,14 @@
+import json
+import random
+import string
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from Finance.forms import Invoice_Form
-from .models import Invoice, Status
-from .serializers import InvoiceSerializers
+from .models import Invoice, Status, Account
+from .serializers import InvoiceSerializers, AccountSerializer
 
 
 # WEB PAGES
@@ -26,7 +29,14 @@ def invoice(request, reference):
         data = Invoice.objects.get(reference=reference)
         return render(request, "invoice.html", {'Invoice': data})
     except Invoice.DoesNotExist:
-        return render(request,'invoiceNotFound.html')
+        return render(request, 'invoiceNotFound.html')
+
+
+def PayInvoice(request, reference):
+    data = Invoice.objects.get(reference=reference)
+    data.status = Status.PAID
+    data.save()
+    return HttpResponseRedirect('/portal/invoice/' + reference)
 
 
 # APIS
@@ -45,11 +55,59 @@ def getInvoiceByID(request, invoiceID):
     return Response(serializer.data)
 
 
-def PayInvoice(request, reference):
-    data = Invoice.objects.get(reference=reference)
-    data.status = Status.PAID
-    data.save()
-    return HttpResponseRedirect('/portal/invoice/' + reference)
+@api_view(['POST'])
+def createStudentFinanceAccount(request):
+    if request.method == 'POST':
+        accountdata = json.loads(request.body)
+        studentId = accountdata.get('studentId')
+        newAccount = Account.objects.create(studentId=studentId, hasOutstandingBalance=False)
+        serializer = AccountSerializer(newAccount, many=False)
+        return Response(serializer.data)
+
+
+@api_view(['POST'])
+def createNewInvoice(request):
+    if request.method == 'POST':
+        invoicedata = json.loads(request.body)
+    amount = invoicedata.get('amount')
+    date = invoicedata.get('dueDate')
+    type = invoicedata.get('type')
+    studentID = invoicedata.get('account', {}).get('studentId')
+
+    newInvoice = Invoice.objects.create(
+        reference=createReferenceID(),
+        amount=amount,
+        dueDate=date,
+        type=type,
+        account_id=studentID,
+        status=Status.OUTSTANDING
+    )
+    serializer = InvoiceSerializers(newInvoice, many=False)
+    targetaccount = Account.objects.get(studentId=studentID)
+    targetaccount.hasOutstandingBalance = True
+    targetaccount.save()
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def getAccountByStudentID(request, studentID):
+    account_data = Account.objects.get(studentId=studentID)
+    serializer = AccountSerializer(account_data, many=False)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def getAllAccounts(request):
+    accounts = Account.objects.all()
+    serializer = AccountSerializer(accounts, many=True)
+    return Response(serializer.data)
+
+
 # Redirects
 def redirect(request):
     return HttpResponseRedirect('/portal')
+
+
+# Creating Reference ID
+def createReferenceID():
+    letters_and_digits = string.ascii_uppercase + string.digits
+    return ''.join(random.choice(letters_and_digits) for _ in range(8))

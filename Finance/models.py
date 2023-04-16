@@ -5,7 +5,7 @@ from django.db import models
 
 
 class Account(models.Model):
-    id = models.BigIntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     studentId = models.CharField(max_length=8, unique=True)
     hasOutstandingBalance = models.BooleanField(default=0)
 
@@ -22,7 +22,7 @@ class Type(models.TextChoices):
 
 
 class Invoice(models.Model):
-    id = models.BigIntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     reference = models.CharField(max_length=8, unique=True)
     amount = models.FloatField(max_length=50)
     dueDate = models.DateField(max_length=50)
