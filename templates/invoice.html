@@ -12,7 +12,8 @@
         <div class="content">
             <h3 class="text-sm-center">Invoice Details</h3>
             <hr />
-            <form action="">
+            <form method="POST" action="{% url 'PayInvoice' reference=Invoice.reference %}">
+                  {% csrf_token %}
                 <div class="form-group">
                     <p><Strong>Reference: </Strong>{{ Invoice.reference }}</p>
                 </div>
@@ -32,8 +33,9 @@
                 <p><Strong>Type: </Strong>{{ Invoice.type }}</p>
                 </div>
                 <hr />
-            </form>
-            <button class="btn btn-primary">PAY</button>
+                <input type="hidden" name="reference" value="{{ invoice.reference }}">
+                <button type="submit" class="btn btn-primary mb-2">PAY</button>
+                </form>
             <a href="/portal">
                 <button class="btn btn-secondary">Back to Portal</button>
             </a>

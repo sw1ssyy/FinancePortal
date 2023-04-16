@@ -1,11 +1,11 @@
-from django.shortcuts import render
-from django.urls import reverse
 from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+
 from Finance.forms import Invoice_Form
+from .models import Invoice, Status
 from .serializers import InvoiceSerializers
-from .models import Invoice
 
 
 # WEB PAGES
@@ -45,6 +45,11 @@ def getInvoiceByID(request, invoiceID):
     return Response(serializer.data)
 
 
+def PayInvoice(request, reference):
+    data = Invoice.objects.get(reference=reference)
+    data.status = Status.PAID
+    data.save()
+    return HttpResponseRedirect('/portal/invoice/' + reference)
 # Redirects
 def redirect(request):
     return HttpResponseRedirect('/portal')

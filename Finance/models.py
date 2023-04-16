@@ -11,9 +11,9 @@ class Account(models.Model):
 
 
 class Status(models.TextChoices):
-    OUTSTANDING = 'O', 'OUTSTANDING'
-    PAID = 'P', 'PAID'
-    CANCELLED = 'C', 'CANCELLED'
+    OUTSTANDING = 'OUTSTANDING'
+    PAID = 'PAID'
+    CANCELLED = 'CANCELLED'
 
 
 class Type(models.TextChoices):
