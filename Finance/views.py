@@ -33,9 +33,23 @@ def invoice(request, reference):
 
 
 def PayInvoice(request, reference):
+    GraduationStatus = 0
     data = Invoice.objects.get(reference=reference)
     data.status = Status.PAID
     data.save()
+    acc = Invoice.objects.filter(account_id=data.account_id)
+    acc2 = Account.objects.get(studentId=data.account_id)
+    for i in acc:
+        print(i.status,i.reference)
+        if i.status == Status.OUTSTANDING:
+            GraduationStatus = GraduationStatus + 1
+
+    print(acc2.studentId,acc2.hasOutstandingBalance)
+    if GraduationStatus == 0:
+        acc2.hasOutstandingBalance = False
+        acc2.save()
+        print(acc2.studentId + " Is Good to Graduate!!")
+
     return HttpResponseRedirect('/portal/invoice/' + reference)
 
 
