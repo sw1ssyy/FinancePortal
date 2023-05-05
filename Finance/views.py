@@ -14,6 +14,10 @@ from .serializers import InvoiceSerializers, AccountSerializer
 # WEB PAGES
 
 # Home Page
+""" Method used to create the home page of the finance portal
+    @form is the InvoiceForm created in forms.py
+    @reference is the data entered into the form and submitted
+"""
 def portal(request):
     form = Invoice_Form(request.GET)
     if form.is_valid():
@@ -24,6 +28,10 @@ def portal(request):
 
 
 # Viewing Invoice
+""" Method used to display the details of invoice 
+    @Data is used to collect the reference from the MySQL data with the same reference 
+    as the one enter in the homepage form
+    """
 def invoice(request, reference):
     try:
         data = Invoice.objects.get(reference=reference)
@@ -31,7 +39,9 @@ def invoice(request, reference):
     except Invoice.DoesNotExist:
         return render(request, 'invoiceNotFound.html')
 
-
+"""Method used to pay the selected invoice
+   This method also checks if an account can graduate by 
+   checking all of the invoices created by an account are paid for"""
 def PayInvoice(request, reference):
     GraduationStatus = 0
     data = Invoice.objects.get(reference=reference)
@@ -54,21 +64,21 @@ def PayInvoice(request, reference):
 
 
 # APIS
-
+""" Method used to create a GET request to get a list of all of the invoices"""
 @api_view(['GET'])
 def getAllInvoice(request):
     items = Invoice.objects.all()
     serializer = InvoiceSerializers(items, many=True)
     return Response(serializer.data)
 
-
+"""Method used to create a GET request to  get a single Invoice by its Invoice ID"""
 @api_view(['GET'])
 def getInvoiceByID(request, invoiceID):
     invoice_data = Invoice.objects.get(pk=invoiceID)
     serializer = InvoiceSerializers(invoice_data, many=False)
     return Response(serializer.data)
 
-
+"""Method used to create a POST request to create a new Finance portal from the student portal"""
 @api_view(['POST'])
 def createStudentFinanceAccount(request):
     if request.method == 'POST':
@@ -78,7 +88,7 @@ def createStudentFinanceAccount(request):
         serializer = AccountSerializer(newAccount, many=False)
         return Response(serializer.data)
 
-
+"""Method used to create a POST request to create a new invoice from the student portal"""
 @api_view(['POST'])
 def createNewInvoice(request):
     if request.method == 'POST':
@@ -101,14 +111,14 @@ def createNewInvoice(request):
     targetaccount.hasOutstandingBalance = True
     targetaccount.save()
     return Response(serializer.data)
-
+""" Method used to create a GET request to see a single account by it's ID"""
 @api_view(['GET'])
 def getAccountByStudentID(request, studentID):
     account_data = Account.objects.get(studentId=studentID)
     serializer = AccountSerializer(account_data, many=False)
     return Response(serializer.data)
 
-
+""" Method used to create a GET request to create a List of all the accounts stored on the MYSQL database"""
 @api_view(['GET'])
 def getAllAccounts(request):
     accounts = Account.objects.all()
@@ -117,10 +127,12 @@ def getAllAccounts(request):
 
 
 # Redirects
+
+""" Method used to redirect the user to the correct homepage URL"""
 def redirect(request):
     return HttpResponseRedirect('/portal')
 
-
+"""Method used to create the reference code for the Invoices"""
 # Creating Reference ID
 def createReferenceID():
     letters_and_digits = string.ascii_uppercase + string.digits

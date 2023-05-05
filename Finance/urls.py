@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 
 
-
+""" Urls of both the APIS and the Web service"""
 urlpatterns = [
     path('', views.redirect, name='redirect'),
     path('portal', views.portal, name='portal'),

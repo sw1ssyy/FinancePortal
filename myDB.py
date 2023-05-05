@@ -1,5 +1,5 @@
 import mysql.connector
-
+""" File used to store the Databases Details and Connections"""
 DB = mysql.connector.connect(
     host='localhost',
     user='root',
